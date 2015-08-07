@@ -67,7 +67,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 import static javax.tools.Diagnostic.Kind.ERROR;
 
-public final class ButterKnifeProcessor extends AbstractProcessor {
+public final class ButterKnifeProcessor extends ButterKnifeAbstractProcessor {
   static final String VIEW_TYPE = "android.view.View";
   private static final String COLOR_STATE_LIST_TYPE = "android.content.res.ColorStateList";
   private static final String BITMAP_TYPE = "android.graphics.Bitmap";
@@ -345,7 +345,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
     }
 
     // Assemble information on the field.
-    int[] ids = element.getAnnotation(Bind.class).value();
+    String[] ids = getViewIds(element);
     if (ids.length != 1) {
       error(element, "@%s for a view must only specify one ID. Found: %s. (%s.%s)",
           Bind.class.getSimpleName(), Arrays.toString(ids), enclosingElement.getQualifiedName(),
@@ -357,7 +357,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
       return;
     }
 
-    int id = ids[0];
+    String id = ids[0];
     BindingClass bindingClass = targetClassMap.get(enclosingElement);
     if (bindingClass != null) {
       ViewBindings viewBindings = bindingClass.getViewBinding(id);
@@ -433,14 +433,14 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int[] ids = element.getAnnotation(Bind.class).value();
+    String[] ids = getViewIds(element);
     if (ids.length == 0) {
       error(element, "@%s must specify at least one ID. (%s.%s)", Bind.class.getSimpleName(),
           enclosingElement.getQualifiedName(), element.getSimpleName());
       return;
     }
 
-    Integer duplicateId = findDuplicate(ids);
+    String duplicateId = findDuplicate(ids);
     if (duplicateId != null) {
       error(element, "@%s annotation contains duplicate ID %d. (%s.%s)", Bind.class.getSimpleName(),
           duplicateId, enclosingElement.getQualifiedName(), element.getSimpleName());
@@ -480,7 +480,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindBool.class).value();
+    String id = getResourceId(element, BindBool.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name, "getBoolean");
@@ -516,7 +516,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindColor.class).value();
+    String id = getResourceId(element, BindColor.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name,
@@ -553,7 +553,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindDimen.class).value();
+    String id = getResourceId(element, BindDimen.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name,
@@ -586,7 +586,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindBitmap.class).value();
+    String id = getResourceId(element, BindBitmap.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldBitmapBinding binding = new FieldBitmapBinding(id, name);
@@ -618,7 +618,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindDrawable.class).value();
+    String id = getResourceId(element, BindDrawable.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name, "getDrawable");
@@ -649,7 +649,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindInt.class).value();
+    String id = getResourceId(element, BindInt.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name, "getInteger");
@@ -681,7 +681,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindString.class).value();
+    String id = getResourceId(element, BindString.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name, "getString");
@@ -715,7 +715,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     // Assemble information on the field.
     String name = element.getSimpleName().toString();
-    int id = element.getAnnotation(BindArray.class).value();
+    String id = getResourceId(element, BindArray.class);
 
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
     FieldResourceBinding binding = new FieldResourceBinding(id, name, methodName);
@@ -748,10 +748,10 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
   }
 
   /** Returns the first duplicate element inside an array, null if there are no duplicates. */
-  private static Integer findDuplicate(int[] array) {
-    Set<Integer> seenElements = new LinkedHashSet<>();
+  private static String findDuplicate(String[] array) {
+    Set<String> seenElements = new LinkedHashSet<>();
 
-    for (int element : array) {
+    for (String element : array) {
       if (!seenElements.add(element)) {
         return element;
       }
@@ -806,7 +806,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
           String.format("@%s annotation value() type not int[].", annotationClass));
     }
 
-    int[] ids = (int[]) annotationValue.invoke(annotation);
+    String[] ids = getListenerIds(element, annotationClass);
     String name = executableElement.getSimpleName().toString();
     boolean required = isRequiredBinding(element);
 
@@ -814,7 +814,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
     boolean hasError = isInaccessibleViaGeneratedCode(annotationClass, "methods", element);
     hasError |= isBindingInWrongPackage(annotationClass, element);
 
-    Integer duplicateId = findDuplicate(ids);
+    String duplicateId = findDuplicate(ids);
     if (duplicateId != null) {
       error(element, "@%s annotation for method contains duplicate ID %d. (%s.%s)",
           annotationClass.getSimpleName(), duplicateId, enclosingElement.getQualifiedName(),
@@ -829,8 +829,8 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
               annotationClass.getSimpleName()));
     }
 
-    for (int id : ids) {
-      if (id == View.NO_ID) {
+    for (String id : ids) {
+      if (id.equals(NO_RESOURCE)) {
         if (ids.length == 1) {
           if (!required) {
             error(element, "ID-free binding must not be annotated with @Nullable. (%s.%s)",
@@ -973,7 +973,7 @@ public final class ButterKnifeProcessor extends AbstractProcessor {
 
     MethodViewBinding binding = new MethodViewBinding(name, Arrays.asList(parameters), required);
     BindingClass bindingClass = getOrCreateTargetClass(targetClassMap, enclosingElement);
-    for (int id : ids) {
+    for (String id : ids) {
       if (!bindingClass.addMethod(id, listener, method, binding)) {
         error(element, "Multiple listener methods with return value specified for ID %d. (%s.%s)",
             id, enclosingElement.getQualifiedName(), element.getSimpleName());

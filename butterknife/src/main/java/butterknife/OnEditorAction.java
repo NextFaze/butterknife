@@ -14,7 +14,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * Bind a method to an {@link OnEditorActionListener OnEditorActionListener} on the view for each
  * ID specified.
  * <pre><code>
- * {@literal @}OnEditorAction(R.id.example) boolean onEditorAction(KeyEvent key) {
+ * {@literal @}OnEditorAction(R.id.example) or {@literal @}OnEditorAction(res = "example")
+ * boolean onEditorAction(KeyEvent key) {
  *   Toast.makeText(this, "Pressed: " + key, Toast.LENGTH_SHORT).show();
  *   return true;
  * }
@@ -45,4 +46,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnEditorAction {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 }

@@ -14,7 +14,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * Bind a method to an {@link OnItemClickListener OnItemClickListener} on the view for each ID
  * specified.
  * <pre><code>
- * {@literal @}OnItemClick(R.id.example_list) void onItemClick(int position) {
+ * {@literal @}OnItemClick(R.id.example) or {@literal @}OnItemClick(res = "example")
+ * void onItemClick(int position) {
  *   Toast.makeText(this, "Clicked position " + position + "!", Toast.LENGTH_SHORT).show();
  * }
  * </code></pre>
@@ -42,4 +43,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnItemClick {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 }

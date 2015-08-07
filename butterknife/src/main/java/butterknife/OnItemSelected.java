@@ -14,7 +14,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * Bind a method to an {@link OnItemSelectedListener OnItemSelectedListener} on the view for each
  * ID specified.
  * <pre><code>
- * {@literal @}OnItemSelected(R.id.example_list) void onItemSelected(int position) {
+ * {@literal @}OnItemSelected(R.id.example) or {@literal @}OnItemSelected(res = "example")
+ * void onItemSelected(int position) {
  *   Toast.makeText(this, "Selected position " + position + "!", Toast.LENGTH_SHORT).show();
  * }
  * </code></pre>
@@ -43,6 +44,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnItemSelected {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 
   /** Listener callback to which the method will be bound. */
   Callback callback() default Callback.ITEM_SELECTED;

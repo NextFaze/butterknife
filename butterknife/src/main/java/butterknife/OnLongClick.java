@@ -14,7 +14,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * Bind a method to an {@link OnLongClickListener OnLongClickListener} on the view for each ID
  * specified.
  * <pre><code>
- * {@literal @}OnLongClick(R.id.example) boolean onLongClick() {
+ * {@literal @}OnLongClick(R.id.example) or {@literal @}OnLongClick(res = "example")
+ * boolean onLongClick() {
  *   Toast.makeText(this, "Long clicked!", Toast.LENGTH_SHORT).show();
  *   return true;
  * }
@@ -41,4 +42,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnLongClick {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 }

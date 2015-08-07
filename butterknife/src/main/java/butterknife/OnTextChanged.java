@@ -13,7 +13,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 /**
  * Bind a method to an {@link TextWatcher TextWatcher} on the view for each ID specified.
  * <pre><code>
- * {@literal @}OnTextChanged(R.id.example) void onTextChanged(CharSequence text) {
+ * {@literal @}OnTextChanged(R.id.example) or {@literal @}OnTextChanged(res = "example")
+ * void onTextChanged(CharSequence text) {
  *   Toast.makeText(this, "Text changed: " + text, Toast.LENGTH_SHORT).show();
  * }
  * </code></pre>
@@ -41,6 +42,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnTextChanged {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 
   /** Listener callback to which the method will be bound. */
   Callback callback() default Callback.TEXT_CHANGED;

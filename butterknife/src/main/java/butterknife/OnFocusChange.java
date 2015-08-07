@@ -14,7 +14,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * Bind a method to an {@link OnFocusChangeListener OnFocusChangeListener} on the view for each ID
  * specified.
  * <pre><code>
- * {@literal @}OnFocusChange(R.id.example) void onFocusChanged(boolean focused) {
+ * {@literal @}OnFocusChange(R.id.example) or {@literal @}OnFocusChange(res = "example")
+ * void onFocusChanged(boolean focused) {
  *   Toast.makeText(this, focused ? "Gained focus" : "Lost focus", Toast.LENGTH_SHORT).show();
  * }
  * </code></pre>
@@ -40,4 +41,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnFocusChange {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 }

@@ -16,8 +16,8 @@ import java.util.Set;
 import static butterknife.internal.ButterKnifeProcessor.VIEW_TYPE;
 
 final class BindingClass {
-  private final Map<Integer, ViewBindings> viewIdMap = new LinkedHashMap<>();
-  private final Map<FieldCollectionViewBinding, int[]> collectionBindings = new LinkedHashMap<>();
+  private final Map<String, ViewBindings> viewIdMap = new LinkedHashMap<>();
+  private final Map<FieldCollectionViewBinding, String[]> collectionBindings = new LinkedHashMap<>();
   private final List<FieldBitmapBinding> bitmapBindings = new ArrayList<>();
   private final List<FieldResourceBinding> resourceBindings = new ArrayList<>();
   private final String classPackage;
@@ -35,15 +35,15 @@ final class BindingClass {
     bitmapBindings.add(binding);
   }
 
-  void addField(int id, FieldViewBinding binding) {
+  void addField(String id, FieldViewBinding binding) {
     getOrCreateViewBindings(id).addFieldBinding(binding);
   }
 
-  void addFieldCollection(int[] ids, FieldCollectionViewBinding binding) {
+  void addFieldCollection(String[] ids, FieldCollectionViewBinding binding) {
     collectionBindings.put(binding, ids);
   }
 
-  boolean addMethod(int id, ListenerClass listener, ListenerMethod method,
+  boolean addMethod(String id, ListenerClass listener, ListenerMethod method,
       MethodViewBinding binding) {
     ViewBindings viewBindings = getOrCreateViewBindings(id);
     if (viewBindings.hasMethodBinding(listener, method)
@@ -62,11 +62,11 @@ final class BindingClass {
     this.parentViewBinder = parentViewBinder;
   }
 
-  ViewBindings getViewBinding(int id) {
+  ViewBindings getViewBinding(String id) {
     return viewIdMap.get(id);
   }
 
-  private ViewBindings getOrCreateViewBindings(int id) {
+  private ViewBindings getOrCreateViewBindings(String id) {
     ViewBindings viewId = viewIdMap.get(id);
     if (viewId == null) {
       viewId = new ViewBindings(id);
@@ -136,7 +136,7 @@ final class BindingClass {
       }
 
       // Loop over each collection binding and emit it.
-      for (Map.Entry<FieldCollectionViewBinding, int[]> entry : collectionBindings.entrySet()) {
+      for (Map.Entry<FieldCollectionViewBinding, String[]> entry : collectionBindings.entrySet()) {
         emitCollectionBinding(builder, entry.getKey(), entry.getValue());
       }
     }
@@ -171,7 +171,7 @@ final class BindingClass {
   }
 
   private void emitCollectionBinding(StringBuilder builder, FieldCollectionViewBinding binding,
-      int[] ids) {
+      String[] ids) {
     builder.append("    target.").append(binding.getName()).append(" = ");
 
     switch (binding.getKind()) {
@@ -212,7 +212,7 @@ final class BindingClass {
           .append(bindings.getId())
           .append(", null);\n");
     } else {
-      if (bindings.getId() == View.NO_ID) {
+      if (bindings.getId().equals(ButterKnifeProcessor.NO_RESOURCE)) {
         builder.append("target;\n");
       } else {
         builder.append("finder.findRequiredView(source, ")

@@ -13,7 +13,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 /**
  * Bind a method to an {@link OnTouchListener OnTouchListener} on the view for each ID specified.
  * <pre><code>
- * {@literal @}OnTouch(R.id.example) boolean onTouch() {
+ * {@literal @}OnTouch(R.id.example) or {@literal @}OnTouch(res = "example")
+ * boolean onTouch() {
  *   Toast.makeText(this, "Touched!", Toast.LENGTH_SHORT).show();
  *   return false;
  * }
@@ -43,4 +44,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnTouch {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 }

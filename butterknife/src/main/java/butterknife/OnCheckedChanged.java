@@ -14,7 +14,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * Bind a method to an {@link OnCheckedChangeListener OnCheckedChangeListener} on the view for
  * each ID specified.
  * <pre><code>
- * {@literal @}OnCheckedChanged(R.id.example) void onChecked(boolean checked) {
+ * {@literal @}OnCheckedChanged(R.id.example) or {@literal @}OnCheckedChanged(res = "example")
+ * void onChecked(boolean checked) {
  *   Toast.makeText(this, checked ? "Checked!" : "Unchecked!", Toast.LENGTH_SHORT).show();
  * }
  * </code></pre>
@@ -41,4 +42,6 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 public @interface OnCheckedChanged {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
+  /** View IDs to which the method will be bound, expressed as {@link String}s. */
+  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
 }
