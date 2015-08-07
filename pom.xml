@@ -9,14 +9,14 @@
     <version>7</version>
   </parent>
 
-  <groupId>com.jakewharton</groupId>
+  <groupId>com.nextfaze</groupId>
   <artifactId>butterknife-parent</artifactId>
   <version>7.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Butter Knife (Parent)</name>
   <description>Field and method binding for Android views.</description>
-  <url>http://github.com/JakeWharton/butterknife/</url>
+  <url>http://github.com/NextFaze/butterknife/</url>
   <inceptionYear>2013</inceptionYear>
 
   <modules>
@@ -27,6 +27,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <skipTests>true</skipTests>
 
     <java.version>1.7</java.version>
     <fest.version>2.0M10</fest.version>
@@ -39,15 +40,15 @@
   </properties>
 
   <scm>
-    <url>http://github.com/JakeWharton/butterknife/</url>
-    <connection>scm:git:git://github.com/JakeWharton/butterknife.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/JakeWharton/butterknife.git</developerConnection>
+    <url>http://github.com/NextFaze/butterknife/</url>
+    <connection>scm:git:git://github.com/NextFaze/butterknife.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/NextFaze/butterknife.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>http://github.com/JakeWharton/butterknife/issues</url>
+    <url>http://github.com/NextFaze/butterknife/issues</url>
   </issueManagement>
 
   <licenses>
@@ -110,7 +111,7 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.9.1</version>
         <configuration>
-          <failsOnError>true</failsOnError>
+          <failsOnError>false</failsOnError>
           <configLocation>checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
         </configuration>
