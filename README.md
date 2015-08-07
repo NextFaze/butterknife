@@ -33,6 +33,30 @@ class ExampleActivity extends Activity {
 }
 ```
 
+ * Also supports using string resource names
+ * This is the required method to bind objects inside library modules
+
+```java
+class LibraryActivity extends Activity {
+  @Bind(res = "user") EditText username;
+  @Bind(res = "pass") EditText password;
+
+  @BindString(res = "login_error")
+  String loginErrorMessage;
+
+  @OnClick(res = "submit") void submit() {
+    // TODO call server...
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.simple_activity);
+    ButterKnife.bind(this);
+    // TODO Use fields...
+  }
+}
+```
+
 For documentation and additional information see [the website][3].
 
 __Remember: A butter knife is like [a dagger][1] only infinitely less sharp.__
@@ -42,28 +66,15 @@ __Remember: A butter knife is like [a dagger][1] only infinitely less sharp.__
 Download
 --------
 
-Download [the latest JAR][2] or grab via Maven:
-```xml
-<dependency>
-  <groupId>com.jakewharton</groupId>
-  <artifactId>butterknife</artifactId>
-  <version>7.0.1</version>
-</dependency>
-```
-or Gradle:
-```groovy
-compile 'com.jakewharton:butterknife:7.0.1'
-```
-
 For the SNAPSHOT version:
 ```xml
 <dependency>
-  <groupId>com.jakewharton</groupId>
+  <groupId>com.nextfaze</groupId>
   <artifactId>butterknife</artifactId>
   <version>7.0.2-SNAPSHOT</version>
 </dependency>
 <dependency>
-  <groupId>com.jakewharton</groupId>
+  <groupId>com.nextfaze</groupId>
   <artifactId>butterknife-compiler</artifactId>
   <version>7.0.2-SNAPSHOT</version>
   <optional>true</optional>
@@ -80,12 +91,33 @@ buildscript {
 apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-  compile 'com.jakewharton:butterknife:7.0.2-SNAPSHOT'
-  apt 'com.jakewharton:butterknife-compiler:7.0.2-SNAPSHOT'
+  compile 'com.nextfaze:butterknife:7.0.2-SNAPSHOT'
+  apt 'com.nextfaze:butterknife-compiler:7.0.2-SNAPSHOT'
 }
 ```
 
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+Library modules require additional parameters to be specified. In most cases:
+
+```groovy
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+    }
+}
+```
+
+Will successfully retrieve the package name to use when referencing resources.
+If this doesn't work for your project, you can specify the name directly:
+
+```groovy
+apt {
+    arguments {
+        resourcePackageName 'com.group.package'
+    }
+}
+```
+
+Snapshots are available in [Sonatype's `snapshots` repository][snap].
 
 
 License
