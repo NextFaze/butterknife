@@ -39,7 +39,7 @@ public @interface OnPageChange {
   /** View IDs to which the method will be bound. */
   int[] value() default { View.NO_ID };
   /** View IDs to which the method will be bound, expressed as {@link String}s. */
-  String[] res() default { butterknife.internal.InternalKeys.NO_RESOURCE };
+  String[] res() default { ButterKnife.NO_RESOURCE };
 
   /** Listener callback to which the method will be bound. */
   Callback callback() default Callback.PAGE_SELECTED;

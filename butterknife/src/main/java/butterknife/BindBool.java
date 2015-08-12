@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 @Retention(CLASS) @Target(FIELD)
 public @interface BindBool {
   /** Boolean resource ID to which the field will be bound. */
-  int value() default butterknife.internal.InternalKeys.NO_ID;
+  int value() default ButterKnife.NO_ID;
   /** Boolean resource ID to which the field will be bound, expressed as a {@link String}. */
-  String res() default butterknife.internal.InternalKeys.NO_RESOURCE;
+  String res() default ButterKnife.NO_RESOURCE;
 }

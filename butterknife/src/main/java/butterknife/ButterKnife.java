@@ -14,10 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static butterknife.internal.InternalKeys.ANDROID_PREFIX;
-import static butterknife.internal.InternalKeys.BINDING_CLASS_SUFFIX;
-import static butterknife.internal.InternalKeys.JAVA_PREFIX;
-
 /**
  * Field and method binding for Android views. Use this class to simplify finding views and
  * attaching listeners by binding them with annotations.
@@ -83,6 +79,9 @@ public final class ButterKnife {
   private ButterKnife() {
     throw new AssertionError("No instances.");
   }
+
+  public static final int NO_ID = android.view.View.NO_ID;
+  public static final String NO_RESOURCE = "";
 
   /** DO NOT USE: Exposed for generated code. */
   @SuppressWarnings("UnusedDeclaration") // Used by generated code.
@@ -344,12 +343,12 @@ public final class ButterKnife {
       return viewBinder;
     }
     String clsName = cls.getName();
-    if (clsName.startsWith(ANDROID_PREFIX) || clsName.startsWith(JAVA_PREFIX)) {
+    if (clsName.startsWith("android.") || clsName.startsWith("java.")) {
       if (debug) Log.d(TAG, "MISS: Reached framework class. Abandoning search.");
       return NOP_VIEW_BINDER;
     }
     try {
-      Class<?> viewBindingClass = Class.forName(clsName + BINDING_CLASS_SUFFIX);
+      Class<?> viewBindingClass = Class.forName(clsName + "$$ViewBinder");
       //noinspection unchecked
       viewBinder = (ViewBinder<Object>) viewBindingClass.newInstance();
       if (debug) Log.d(TAG, "HIT: Loaded view binder class.");

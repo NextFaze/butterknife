@@ -18,9 +18,9 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 @Retention(CLASS) @Target(FIELD)
 public @interface BindBitmap {
   /** Drawable resource ID from which the {@link Bitmap} will be created. */
-  int value() default butterknife.internal.InternalKeys.NO_ID;
+  int value() default ButterKnife.NO_ID;
   /** Drawable resource ID from which the {@link Bitmap} will be created,
    * expressed as a {@link String}.
    */
-  String res() default butterknife.internal.InternalKeys.NO_RESOURCE;
+  String res() default ButterKnife.NO_RESOURCE;
 }

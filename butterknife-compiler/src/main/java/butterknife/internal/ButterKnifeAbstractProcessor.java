@@ -44,7 +44,7 @@ import static javax.tools.Diagnostic.Kind.ERROR;
 
 abstract class ButterKnifeAbstractProcessor extends AbstractProcessor {
 
-    public static final String NO_RESOURCE = InternalKeys.NO_RESOURCE;
+    public static final String NO_RESOURCE = "";
     public static final String MANIFEST_FILE = "androidManifestFile";
     public static final String RESOURCE_PACKAGE_NAME = "resourcePackageName";
 
